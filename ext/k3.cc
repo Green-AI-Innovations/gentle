@@ -97,9 +97,9 @@ int main(int argc, char *argv[]) {
 #ifdef HAVE_CUDA
     fprintf(stdout, "Cuda enabled\n");
     CuDevice &cu_device = CuDevice::Instantiate();
-    cu_device.SetVerbose(true);
-    cu_device.SelectGpuId("yes");
-    fprintf(stdout, "active gpu: %d\n", cu_device.ActiveGpuId());
+    // cu_device.SetVerbose(true);
+    // cu_device.SelectGpuId("yes");
+    // fprintf(stdout, "active gpu: %d\n", cu_device.ActiveGpuId());
 #endif
     const std::string ivector_model_dir = nnet_dir + "/ivector_extractor";
     const std::string nnet3_rxfilename = nnet_dir + "/final.mdl";
