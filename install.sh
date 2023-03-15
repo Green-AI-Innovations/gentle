@@ -16,7 +16,7 @@ GENTLE_ROOT=$(pwd)
 GENTLE_EXT_DIR="$GENTLE_ROOT/ext"
 KALDI_ROOT="$GENTLE_EXT_DIR/kaldi"
 KALDI_TOOLS_DIR="$KALDI_ROOT/tools"
-KALDI_TOOLS_EXTRA_DIR="$KALDI_TOOLS_DIR/extras"
+KALDI_TOOLS_EXTRAS_DIR="$KALDI_TOOLS_DIR/extras"
 KALDI_SRC_DIR="$KALDI_ROOT/src"
 
 # Define the directories to check
@@ -26,7 +26,7 @@ dirs_to_check=(
     "$KALDI_ROOT"
     "$KALDI_TOOLS_DIR"
     "$KALDI_SRC_DIR"
-    "$KALDI_TOOLS_EXTRA_DIR"
+    "$KALDI_TOOLS_EXTRAS_DIR"
 )
 
 # Check if the directories exist
@@ -65,25 +65,26 @@ fi
 echo "Entering $KALDI_TOOLS_DIR"
 pushd $KALDI_TOOLS_DIR >/dev/null
 echo "Installing essential dependencies for Kaldi's tools"
-# make -j $(nproc) -w -s
+make -j $(nproc) -w -s
 echo "Leaving $KALDI_TOOLS_DIR"
 popd >/dev/null
 
 # Install OpenBLAS
-echo "Entering $KALDI_TOOLS_EXTRA_DIR"
-pushd $KALDI_TOOLS_EXTRA_DIR >/dev/null
-# export MAKEFLAGS="-j $(nproc) -w -s"
+echo "Entering $KALDI_TOOLS_EXTRAS_DIR"
+pushd $KALDI_TOOLS_EXTRAS_DIR >/dev/null
+export MAKEFLAGS="-j $(nproc) -w -s"
 echo "Installing OpenBLAS"
-# ./install_openblas.sh
-# unset MAKEFLAGS
-echo "Leaving $KALDI_TOOLS_EXTRA_DIR"
+./install_openblas.sh
+unset MAKEFLAGS
+echo "Leaving $KALDI_TOOLS_EXTRAS_DIR"
 popd >/dev/null
 
 # Configure Kaldi installation
 echo "Entering $KALDI_SRC_DIR"
 pushd $KALDI_SRC_DIR >/dev/null
 echo "Configuring Kaldi installation"
-./configure --static --static-math=yes --static-fst=yes --use-cuda=no --openblas-root=$KALDI_TOOLS_DIR/OpenBLAS/install
+OPENBLAS_INSTALL_PATH="$KALDI_TOOLS_EXTRAS_DIR/OpenBLAS/install"
+./configure --static --static-math=yes --static-fst=yes --use-cuda=no --openblas-root=$OPENBLAS_INSTALL_PATH
 echo "Leaving $KALDI_SRC_DIR"
 popd >/dev/null
 
